@@ -8,19 +8,18 @@
 }
 
 @keyframes border-transform {
-    0% {
-        border-top: 2px solid #f1194b;
+    from {
+        border-top: 1px solid #000;
+        border-top-width: 0;
     }
-    25% {
-        border-right: 2px solid #f1194b;
+    to {
+        border-top: 1px solid #000;
+        border-top-width: 100%;
     }
-    50% {
-        border-bottom: 2px solid #f1194b;
-    }
-    75% {
-        border-left: 2px solid #f1194b;
-    }
-    100% {
-        border-top: 2px solid transparent;
-    }
+}
+
+@keyframes rotate {
+	100% {
+		transform: rotate(1turn);
+	}
 }

@@ -8,7 +8,9 @@ const app = {
     isPlaying: false,
     isRandom: false,
     isReplay: false,
+    volume: 0,
     config: JSON.parse(localStorage.getItem(PLAYER_STORAGE_KEY)) || {},
+    checkedList: [],
     songs: [
         {
             name: 'Nevada',
@@ -54,20 +56,22 @@ const app = {
     loadConfig: function() {
         this.isRandom = this.config.isRandom;
         this.isReplay = this.config.isReplay;
-    
+        this.volume = this.config.volume;
     },
     render: function() {
         const htmls = this.songs.map((song, index) => {
             return `
                 <li class="song_item ${index == this.currentIndex ? 'song_item--active' : ''}">
-                    <img src="${song.image}" alt="" class="song_item--image">
-                    <div class="song_item--description">
-                        <p class="song_item--title">${song.name}</p>
-                        <p class="song_item--artist">${song.singer}</p>
+                    <div class="song_item-container">
+                        <img src="${song.image}" alt="" class="song_item--image">
+                        <div class="song_item--description">
+                            <p class="song_item--title">${song.name}</p>
+                            <p class="song_item--artist">${song.singer}</p>
+                        </div>
+                        <button class="song_item--actions">
+                            <i class="fa-solid fa-ellipsis"></i>
+                        </button>
                     </div>
-                    <button class="song_item--actions">
-                        <i class="fa-solid fa-ellipsis"></i>
-                    </button>
                 </li>
             `
         })
@@ -143,7 +147,7 @@ const app = {
         }
         
         // ! Update progress
-        song_audio.ontimeupdate = function() {
+        song_audio.ontimeupdate = function() {   
             if(song_audio.duration) {
                 const progressPercent = (song_audio.currentTime / song_audio.duration * 100)
                 progressBar.value = progressPercent
@@ -151,10 +155,11 @@ const app = {
                 progressBar.style.setProperty('--progressBarWidth', '5px')
             }
         }
-
-        // ! Progress bar change
-        progressBar.onchange = function() {
-            song_audio.pause()
+        // ! Progress bar changedy
+        progressBar.oninput = function() {
+            if(!_this.isPlaying) {
+                song_audio.pause()
+            }
 
             if(progressBar.value == 0) {
                 progressBar.style.setProperty('--progressBarWidth', '0')
@@ -167,9 +172,13 @@ const app = {
 
             song_audio.currentTime = seekTime
 
-            if(!_this.isPlaying) {
-                button.classList.remove('play')
-                _this.isPlaying = false
+            progressBar.onmouseup = function() {
+                if(_this.isPlaying) { 
+                    song_audio.play()
+                    button.classList.add('play')
+                    _this.isPlaying = true
+                    song_img_animate.play()
+                }
             }
         }
 
@@ -241,6 +250,7 @@ const app = {
                 // console.log(e.target.closest('.song_item'))
                 // console.log(playList.children)
                 _this.currentIndex = Array.from(playList.children).indexOf(e.target.closest('.song_item'))
+                _this.checkIndex(_this.currentIndex)
                 _this.loadCurrentSong()
 
                 song_audio.play()
@@ -260,11 +270,10 @@ const app = {
         }
 
         // ! Song volume
-        console.log(song_audio.volume)
-        // volumeBar.style.setProperty('--volumeBarWidth', song_audio.volume*100 + '%')
-
         volumeBar.onchange = function() {
             song_audio.volume = volumeBar.value / 100
+            _this.volume = song_audio.volume
+            _this.setConfig('volume', _this.volume)
         }
         
     },
@@ -275,6 +284,27 @@ const app = {
                 block: 'nearest'
             })
         }, 300)
+    },
+    checkIndex: function() {
+        if(this.checkedList.length == this.songs.length) {
+            this.checkedList = []
+        }
+        
+        if(this.checkedList.includes(this.currentIndex)) {
+            // console.log(this.currentIndex, this.currentSong)
+
+            if(this.currentIndex == this.songs.length - 1) {
+                this.currentIndex = 0
+            }
+            else {
+                this.currentIndex++
+            }
+
+            return this.checkIndex(this.currentIndex)
+        }
+
+        this.checkedList.push(this.currentIndex)
+        // console.log(this.checkedList)
     },
     loadCurrentSong: function() {
         const song_title = $('.song_title')
@@ -292,6 +322,7 @@ const app = {
             this.currentIndex = 0;
         }
 
+        this.checkIndex(this.currentIndex)
         this.loadCurrentSong()
     },
     prevSong: function() {
@@ -301,6 +332,7 @@ const app = {
             this.currentIndex = this.songs.length - 1;
         }
 
+        this.checkIndex(this.currentIndex)
         this.loadCurrentSong()
     },
     randomSong: function() {
@@ -309,6 +341,8 @@ const app = {
             newIndex = Math.floor(Math.random() * this.songs.length);
         } while (newIndex === this.currentIndex);
         this.currentIndex = newIndex;
+
+        this.checkIndex(this.currentIndex)
         this.loadCurrentSong();
     },
     start: function() {
@@ -318,6 +352,7 @@ const app = {
         
         this.handleEvents();
 
+        this.checkIndex(this.currentIndex)
         this.loadCurrentSong()
 
         this.render();  
@@ -329,7 +364,9 @@ const app = {
             $('.song_button--replay').classList.toggle('song_button--active', this.isReplay)
         }
 
-        $('.song_volumeBar').value = $('.song_audio').volume * 100
+        $('.song_volumeBar').value = this.volume * 100
+
+        $('.song_audio').volume = this.volume
     }                               
 }
 

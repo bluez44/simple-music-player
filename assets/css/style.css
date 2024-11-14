@@ -217,13 +217,23 @@
 }
 
 .song_item {
+    margin-bottom: 12px;
+    padding: 1px;
+    border-radius: 8px;
+}
+
+.song_item .song_item-container {
+    position: relative;
     display: flex;
     align-items: center;
     background-color: #fff;
     padding: 16px;
     border-radius: 8px;
-    margin-bottom: 12px;
     transition: all .3s;
+}
+
+.song_item:hover {
+    cursor: pointer;
 }
 
 .song_item:active {
@@ -231,7 +241,13 @@
 }
 
 .song_item--active {
+    position: relative;
+    overflow: hidden;
+}
+
+.song_item--active .song_item-container {
     background-color: #f1194b;
+    z-index: 1;
 }
 
 .song_item--active .song_item--title,
@@ -251,6 +267,40 @@
     margin-right: 16px;
     border-radius: 50%;
     border: 2px solid transparent;
+}
+
+.song_item--active::after {
+    content: "";
+    z-index: 1;
+    position: absolute;
+    top: 17px;
+    left: 17px;
+    display: block;
+    width: 48px;
+    height: 48px;
+    border-top: 1px solid #fff;
+    border-bottom: 1px solid #fff;
+    border-left: 1px solid #000;
+    border-right: 1px solid #000;
+    background-color: transparent;
+    border-radius: 50%;
+    animation: rotate 5s linear infinite;
+}
+
+.song_item--active::before {
+    content: '';
+    position: absolute;
+    z-index: 0;
+    left: -50%;
+    top: -350%;
+    width: 200%;
+    height: 800%;
+    background-color: #399953;
+    background-repeat: no-repeat;
+    background-size: 50% 50%, 50% 50%;
+    background-position: 0 0, 100% 0, 100% 100%, 0 100%;
+    background-image: linear-gradient(#399953, #399953), linear-gradient(#fbb300, #fbb300), linear-gradient(#d53e33, #d53e33), linear-gradient(#377af5, #377af5);
+    animation: rotate 4s linear infinite;
 }
 
 .song_item--description {
