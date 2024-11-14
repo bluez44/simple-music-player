@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="stylesheet" href="./assets/css/animation.css">
+    <link rel="stylesheet" href="./assets/fonts/fontawesome-free-6.6.0-web/css/all.min.css">
+    <title>Document</title>
+</head>
+<body>
+    <div class="container">
+        <div class="song">
+            <div class="song_description">
+                <p class="song_status">Now playing</p>
+                <p class="song_title"></p>
+                <img src="" alt="" class="song_image">
+            </div>
+            <div class="song_controls">
+                <button class="song_button song_button--replay">
+                    <i class="fa-solid fa-rotate-right"></i>
+                </button>
+                <button class="song_button song_button--prev">
+                    <i class="fa-solid fa-backward"></i>
+                </button>
+                <button class="song_button song_button--play_pause">
+                    <i class="fa-solid fa-play" style="margin-left: 3px"></i>
+                    <i class="fa-solid fa-pause"></i>
+                </button>
+                <button class="song_button song_button--next">
+                    <i class="fa-solid fa-forward"></i>
+                </button>
+                <button class="song_button song_button--random">
+                    <i class="fa-solid fa-shuffle"></i>
+                </button>
+            </div>
+
+            <div style="display: flex; width: 100%; align-items: center; margin-bottom: 16px">
+                <i class="fa-solid fa-headphones song_icon"></i>
+                <input class="song_progressBar" type="range" value="0" min="0" max="100" step="1">
+            </div>
+
+            <div style="display: flex; width: 100%; align-items: center; margin-bottom: 16px">
+                <i class="fa-solid fa-volume-high song_icon"></i>
+                <input class="song_volumeBar" type="range" value="0" min="0" max="100" step="1">
+            </div>
+
+            <audio src="" class="song_audio"></audio>
+        </div>
+        <div class="songs">
+            <ul class="song_list">
+
+            </ul>
+        </div>
+    </div>
+    <script src="./assets/js/index.js"></script>
+</body>
+</html>

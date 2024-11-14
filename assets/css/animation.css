@@ -1,0 +1,26 @@
+@keyframes rotate360 {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes border-transform {
+    0% {
+        border-top: 2px solid #f1194b;
+    }
+    25% {
+        border-right: 2px solid #f1194b;
+    }
+    50% {
+        border-bottom: 2px solid #f1194b;
+    }
+    75% {
+        border-left: 2px solid #f1194b;
+    }
+    100% {
+        border-top: 2px solid transparent;
+    }
+}
